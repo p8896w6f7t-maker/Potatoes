@@ -1,0 +1,1028 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>감자 키우기</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+body{
+  margin:0;
+  background:#20170f;
+  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+  color:#3b2818;
+  user-select:none;
+}
+
+.app{
+  width:min(100%,520px);
+  min-height:100vh;
+  margin:auto;
+  background:#f8e9c9;
+  overflow:hidden;
+}
+
+header{
+  padding:18px 16px 12px;
+  text-align:center;
+  background:#fff3d7;
+}
+
+h1{
+  margin:0;
+  font-size:26px;
+}
+
+.subtitle{
+  font-size:12px;
+  color:#8c6a48;
+  margin-top:4px;
+}
+
+/* =========================
+   배경
+========================= */
+
+.scene{
+  position:relative;
+  height:300px;
+  overflow:hidden;
+  border-bottom:4px solid #6c4527;
+}
+
+/* 기본 밭 */
+.field{
+  background:
+    linear-gradient(#9bd47e 0 25%,#75b85b 25% 38%,#8c5b35 38% 100%);
+}
+
+.field:before{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:180px;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(70,40,20,.15) 0px,
+      rgba(70,40,20,.15) 7px,
+      transparent 7px,
+      transparent 43px
+    );
+}
+
+.field:after{
+  content:"🌿   🌱       🌿      🌱       🌿";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:55px;
+  font-size:27px;
+  letter-spacing:8px;
+  opacity:.8;
+}
+
+/* 산책 배경 */
+.walk{
+  background:
+    linear-gradient(
+      #9ddcf2 0 43%,
+      #73b95d 43% 100%
+    );
+}
+
+.walk:before{
+  content:"☁️";
+  position:absolute;
+  top:18px;
+  left:30px;
+  font-size:48px;
+}
+
+.walk:after{
+  content:"🌳      🌳          🌳      🌳";
+  position:absolute;
+  top:55px;
+  left:0;
+  right:0;
+  font-size:48px;
+  letter-spacing:5px;
+}
+
+/* 태어나기 전 */
+.egg-scene{
+  background:
+    linear-gradient(
+      #a9def0 0 48%,
+      #7fbd62 48% 100%
+    );
+}
+
+.egg-scene:after{
+  content:"🌱     🌱        🌱     🌱";
+  position:absolute;
+  bottom:25px;
+  left:0;
+  right:0;
+  text-align:center;
+  font-size:30px;
+}
+
+/* 해 */
+.sun{
+  position:absolute;
+  right:22px;
+  top:18px;
+  font-size:42px;
+  z-index:2;
+}
+
+/* =========================
+   캐릭터
+========================= */
+
+.character{
+  position:absolute;
+  z-index:5;
+  left:50%;
+  top:53%;
+  transform:translate(-50%,-50%);
+  width:200px;
+  height:200px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.character img{
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;
+  filter:drop-shadow(0 8px 5px rgba(0,0,0,.22));
+}
+
+.sprout{
+  font-size:115px;
+  line-height:1;
+  filter:drop-shadow(0 7px 5px rgba(0,0,0,.18));
+}
+
+/* =========================
+   상태창
+========================= */
+
+.status{
+  padding:12px 14px 7px;
+  background:#fff8e9;
+}
+
+.name-row{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  margin-bottom:8px;
+}
+
+.name{
+  font-size:22px;
+  font-weight:800;
+}
+
+.badge{
+  font-size:11px;
+  padding:4px 8px;
+  border-radius:999px;
+  background:#8b5e34;
+  color:white;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:6px;
+}
+
+.stat{
+  background:#f2dfbc;
+  border-radius:12px;
+  padding:7px 5px;
+  text-align:center;
+  font-size:11px;
+}
+
+.bar{
+  height:7px;
+  background:#dcc7a3;
+  border-radius:99px;
+  overflow:hidden;
+  margin-top:4px;
+}
+
+.fill{
+  height:100%;
+  background:#6c9f48;
+  border-radius:99px;
+}
+
+/* =========================
+   버튼
+========================= */
+
+.actions{
+  padding:10px 14px 18px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  background:#fff8e9;
+}
+
+button{
+  border:0;
+  border-radius:13px;
+  padding:13px 5px;
+  background:#fff;
+  border:2px solid #e4c99e;
+  color:#4a311c;
+  font-size:14px;
+  font-weight:700;
+  box-shadow:0 2px 0 #d5b684;
+}
+
+button:active{
+  transform:translateY(2px);
+  box-shadow:none;
+}
+
+.primary{
+  background:#e8c36a;
+}
+
+.notice{
+  position:fixed;
+  left:50%;
+  bottom:22px;
+  transform:translateX(-50%);
+  background:rgba(45,30,18,.92);
+  color:white;
+  padding:10px 15px;
+  border-radius:999px;
+  font-size:13px;
+  z-index:20;
+  opacity:0;
+  pointer-events:none;
+  transition:.2s;
+}
+
+.notice.show{
+  opacity:1;
+}
+
+@media(min-width:521px){
+  body{
+    padding:20px 0;
+  }
+
+  .app{
+    border-radius:20px;
+    box-shadow:0 10px 35px rgba(0,0,0,.3);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+  <h1>🥔 감자 키우기</h1>
+  <div class="subtitle">나만의 감자를 정성껏 키워보자</div>
+</header>
+
+<!-- 게임 화면 -->
+<div id="scene" class="scene egg-scene">
+
+  <div class="sun">☀️</div>
+
+  <div id="character" class="character">
+    <div class="sprout">🌱</div>
+  </div>
+
+</div>
+
+<!-- 상태 -->
+<section class="status">
+
+  <div class="name-row">
+    <span id="name" class="name">아직 감자가 태어나지 않았어요</span>
+    <span id="personality" class="badge">싹</span>
+  </div>
+
+  <div class="stats">
+
+    <div class="stat">
+      영양
+      <b id="hungerText">100</b>
+      <div class="bar">
+        <div id="hungerBar" class="fill"></div>
+      </div>
+    </div>
+
+    <div class="stat">
+      수분
+      <b id="waterText">100</b>
+      <div class="bar">
+        <div id="waterBar" class="fill"></div>
+      </div>
+    </div>
+
+    <div class="stat">
+      애정
+      <b id="affectionText">50</b>
+      <div class="bar">
+        <div id="affectionBar" class="fill"></div>
+      </div>
+    </div>
+
+    <div class="stat">
+      피로
+      <b id="tiredText">0</b>
+      <div class="bar">
+        <div id="tiredBar" class="fill"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- 행동 -->
+<section class="actions">
+
+  <button class="primary" onclick="fertilize()">
+    🌱 비료주기
+  </button>
+
+  <button onclick="water()">
+    💧 물주기
+  </button>
+
+  <button onclick="sunshine()">
+    ☀️ 햇빛쬐기
+  </button>
+
+  <button onclick="pet()">
+    🤲 쓰다듬기
+  </button>
+
+  <button onclick="walk()">
+    🌳 산책
+  </button>
+
+  <button onclick="harvest()">
+    🥔 수확하기
+  </button>
+
+  <button onclick="resetGame()">
+    ↻ 처음부터
+  </button>
+
+</section>
+
+</div>
+
+<div id="notice" class="notice"></div>
+
+
+<script>
+
+/* ==================================================
+   네가 올린 이미지
+   파일 이름 = 캐릭터 이름
+================================================== */
+
+/*
+   중요:
+   아래 이미지 파일들을 index.html과
+   같은 GitHub 폴더에 업로드해야 함.
+
+   꾼감자.PNG
+   대장감자.PNG
+   저는감자.PNG
+   폭력감자.PNG
+   독감자.PNG
+*/
+
+const characters = [
+  {
+    name:"꾼감자",
+    image:"꾼감자.PNG"
+  },
+  {
+    name:"대장감자",
+    image:"대장감자.PNG"
+  },
+  {
+    name:"저는감자",
+    image:"저는감자.PNG"
+  },
+  {
+    name:"폭력감자",
+    image:"폭력감자.PNG"
+  },
+  {
+    name:"독감자",
+    image:"독감자.PNG"
+  }
+];
+
+
+/* ==================================================
+   게임 데이터
+================================================== */
+
+let state = JSON.parse(
+  localStorage.getItem("POTATO_GAME_V2")
+) || {
+
+  born:false,
+
+  growth:0,
+
+  character:null,
+
+  personality:null,
+
+  hunger:100,
+
+  water:100,
+
+  affection:50,
+
+  tired:0,
+
+  walking:false
+
+};
+
+
+/* ==================================================
+   저장
+================================================== */
+
+function save(){
+
+  localStorage.setItem(
+    "POTATO_GAME_V2",
+    JSON.stringify(state)
+  );
+
+}
+
+
+/* ==================================================
+   숫자 제한
+================================================== */
+
+function clamp(value){
+
+  return Math.max(
+    0,
+    Math.min(100,value)
+  );
+
+}
+
+
+/* ==================================================
+   알림
+================================================== */
+
+function toast(text){
+
+  const notice =
+    document.getElementById("notice");
+
+  notice.textContent = text;
+
+  notice.classList.add("show");
+
+  clearTimeout(window.noticeTimer);
+
+  window.noticeTimer =
+    setTimeout(
+      ()=>{
+        notice.classList.remove("show");
+      },
+      1300
+    );
+
+}
+
+
+/* ==================================================
+   캐릭터 랜덤 선택
+================================================== */
+
+function chooseCharacter(){
+
+  const index =
+    Math.floor(
+      Math.random()*characters.length
+    );
+
+  state.character =
+    characters[index];
+
+}
+
+
+/* ==================================================
+   감자 태어나기
+================================================== */
+
+function hatch(){
+
+  if(
+    !state.born &&
+    state.growth >= 100
+  ){
+
+    state.born = true;
+
+    chooseCharacter();
+
+    const personalities = [
+      "애교쟁이",
+      "느긋한",
+      "장난꾸러기",
+      "호기심 많은",
+      "겁이 많은"
+    ];
+
+    state.personality =
+      personalities[
+        Math.floor(
+          Math.random()*personalities.length
+        )
+      ];
+
+    save();
+
+    render();
+
+    toast(
+      state.character.name+
+      "가 태어났어요!"
+    );
+
+  }
+
+}
+
+
+/* ==================================================
+   비료
+================================================== */
+
+function fertilize(){
+
+  state.growth =
+    Math.min(
+      100,
+      state.growth+12
+    );
+
+  state.hunger =
+    clamp(
+      state.hunger+15
+    );
+
+  state.affection =
+    clamp(
+      state.affection+4
+    );
+
+  state.tired =
+    clamp(
+      state.tired+3
+    );
+
+  hatch();
+
+  save();
+
+  render();
+
+  toast("영양분을 듬뿍 줬어요!");
+
+}
+
+
+/* ==================================================
+   물
+================================================== */
+
+function water(){
+
+  state.growth =
+    Math.min(
+      100,
+      state.growth+10
+    );
+
+  state.water =
+    clamp(
+      state.water+20
+    );
+
+  state.affection =
+    clamp(
+      state.affection+3
+    );
+
+  hatch();
+
+  save();
+
+  render();
+
+  toast("물을 촉촉하게 줬어요!");
+
+}
+
+
+/* ==================================================
+   햇빛
+================================================== */
+
+function sunshine(){
+
+  state.growth =
+    Math.min(
+      100,
+      state.growth+8
+    );
+
+  state.water =
+    clamp(
+      state.water-5
+    );
+
+  state.affection =
+    clamp(
+      state.affection+5
+    );
+
+  hatch();
+
+  save();
+
+  render();
+
+  toast("햇빛을 쬐었어요!");
+
+}
+
+
+/* ==================================================
+   쓰다듬기
+================================================== */
+
+function pet(){
+
+  state.affection =
+    clamp(
+      state.affection+10
+    );
+
+  state.tired =
+    clamp(
+      state.tired-4
+    );
+
+  save();
+
+  render();
+
+  if(state.born){
+
+    toast(
+      state.character.name+
+      "가 좋아해요!"
+    );
+
+  }else{
+
+    toast(
+      "싹을 살살 쓰다듬었어요!"
+    );
+
+  }
+
+}
+
+
+/* ==================================================
+   산책
+   배경이 밭 → 공원으로 바뀜
+================================================== */
+
+function walk(){
+
+  if(!state.born){
+
+    toast(
+      "아직 싹이라 산책을 못 가요!"
+    );
+
+    return;
+
+  }
+
+  if(state.walking){
+
+    return;
+
+  }
+
+  state.walking = true;
+
+  state.tired =
+    clamp(
+      state.tired+12
+    );
+
+  state.affection =
+    clamp(
+      state.affection+8
+    );
+
+  const scene =
+    document.getElementById("scene");
+
+  scene.className =
+    "scene walk";
+
+  toast(
+    state.character.name+
+    "와 산책 중!"
+  );
+
+  save();
+
+  /*
+    3초 후 다시 밭으로
+  */
+
+  setTimeout(
+
+    ()=>{
+
+      state.walking = false;
+
+      save();
+
+      render();
+
+    },
+
+    3000
+
+  );
+
+}
+
+
+/* ==================================================
+   수확
+================================================== */
+
+function harvest(){
+
+  if(!state.born){
+
+    toast(
+      "아직 감자가 태어나지 않았어요!"
+    );
+
+    return;
+
+  }
+
+  toast(
+    state.character.name+
+    "는 계속 키워주세요!"
+  );
+
+}
+
+
+/* ==================================================
+   초기화
+================================================== */
+
+function resetGame(){
+
+  const ok =
+    confirm(
+      "정말 처음부터 다시 키울까요?"
+    );
+
+  if(!ok){
+
+    return;
+
+  }
+
+  localStorage.removeItem(
+    "POTATO_GAME_V2"
+  );
+
+  location.reload();
+
+}
+
+
+/* ==================================================
+   화면 표시
+================================================== */
+
+function render(){
+
+  const scene =
+    document.getElementById("scene");
+
+  const character =
+    document.getElementById("character");
+
+  const name =
+    document.getElementById("name");
+
+  const personality =
+    document.getElementById("personality");
+
+
+  /*
+    태어나기 전
+  */
+
+  if(!state.born){
+
+    scene.className =
+      "scene egg-scene";
+
+    character.innerHTML =
+      '<div class="sprout">🌱</div>';
+
+    name.textContent =
+      "감자 싹";
+
+    personality.textContent =
+      "성장 중";
+
+  }
+
+  /*
+    태어난 후
+  */
+
+  else{
+
+    scene.className =
+      "scene field";
+
+    character.innerHTML =
+      '<img src="'+
+      state.character.image+
+      '" alt="'+
+      state.character.name+
+      '">';
+
+    name.textContent =
+      state.character.name;
+
+    personality.textContent =
+      state.personality;
+
+  }
+
+
+  /*
+    상태 수치
+  */
+
+  document.getElementById(
+    "hungerText"
+  ).textContent =
+    Math.round(state.hunger);
+
+  document.getElementById(
+    "waterText"
+  ).textContent =
+    Math.round(state.water);
+
+  document.getElementById(
+    "affectionText"
+  ).textContent =
+    Math.round(state.affection);
+
+  document.getElementById(
+    "tiredText"
+  ).textContent =
+    Math.round(state.tired);
+
+
+  document.getElementById(
+    "hungerBar"
+  ).style.width =
+    state.hunger+"%";
+
+  document.getElementById(
+    "waterBar"
+  ).style.width =
+    state.water+"%";
+
+  document.getElementById(
+    "affectionBar"
+  ).style.width =
+    state.affection+"%";
+
+  document.getElementById(
+    "tiredBar"
+  ).style.width =
+    state.tired+"%";
+
+}
+
+
+/* ==================================================
+   시간에 따른 상태 변화
+================================================== */
+
+setInterval(
+
+  ()=>{
+
+    if(!state.born){
+
+      return;
+
+    }
+
+    state.hunger =
+      clamp(
+        state.hunger-2
+      );
+
+    state.water =
+      clamp(
+        state.water-2
+      );
+
+    state.tired =
+      clamp(
+        state.tired+2
+      );
+
+
+    if(
+      state.hunger < 25 ||
+      state.water < 25
+    ){
+
+      state.affection =
+        clamp(
+          state.affection-1
+        );
+
+    }
+
+    save();
+
+    render();
+
+  },
+
+  3000
+
+);
+
+
+/* ==================================================
+   시작
+================================================== */
+
+render();
+
+</script>
+
+</body>
+</html>
