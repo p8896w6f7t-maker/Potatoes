@@ -1,1028 +1,278 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>감자 키우기</title>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>영상미디어와 사회 - 단답형 퀴즈</title>
 <style>
-*{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-}
-
-body{
-  margin:0;
-  background:#20170f;
-  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
-  color:#3b2818;
-  user-select:none;
-}
-
-.app{
-  width:min(100%,520px);
-  min-height:100vh;
-  margin:auto;
-  background:#f8e9c9;
-  overflow:hidden;
-}
-
-header{
-  padding:18px 16px 12px;
-  text-align:center;
-  background:#fff3d7;
-}
-
-h1{
-  margin:0;
-  font-size:26px;
-}
-
-.subtitle{
-  font-size:12px;
-  color:#8c6a48;
-  margin-top:4px;
-}
-
-/* =========================
-   배경
-========================= */
-
-.scene{
-  position:relative;
-  height:300px;
-  overflow:hidden;
-  border-bottom:4px solid #6c4527;
-}
-
-/* 기본 밭 */
-.field{
-  background:
-    linear-gradient(#9bd47e 0 25%,#75b85b 25% 38%,#8c5b35 38% 100%);
-}
-
-.field:before{
-  content:"";
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:0;
-  height:180px;
-  background:
-    repeating-linear-gradient(
-      0deg,
-      rgba(70,40,20,.15) 0px,
-      rgba(70,40,20,.15) 7px,
-      transparent 7px,
-      transparent 43px
-    );
-}
-
-.field:after{
-  content:"🌿   🌱       🌿      🌱       🌿";
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:55px;
-  font-size:27px;
-  letter-spacing:8px;
-  opacity:.8;
-}
-
-/* 산책 배경 */
-.walk{
-  background:
-    linear-gradient(
-      #9ddcf2 0 43%,
-      #73b95d 43% 100%
-    );
-}
-
-.walk:before{
-  content:"☁️";
-  position:absolute;
-  top:18px;
-  left:30px;
-  font-size:48px;
-}
-
-.walk:after{
-  content:"🌳      🌳          🌳      🌳";
-  position:absolute;
-  top:55px;
-  left:0;
-  right:0;
-  font-size:48px;
-  letter-spacing:5px;
-}
-
-/* 태어나기 전 */
-.egg-scene{
-  background:
-    linear-gradient(
-      #a9def0 0 48%,
-      #7fbd62 48% 100%
-    );
-}
-
-.egg-scene:after{
-  content:"🌱     🌱        🌱     🌱";
-  position:absolute;
-  bottom:25px;
-  left:0;
-  right:0;
-  text-align:center;
-  font-size:30px;
-}
-
-/* 해 */
-.sun{
-  position:absolute;
-  right:22px;
-  top:18px;
-  font-size:42px;
-  z-index:2;
-}
-
-/* =========================
-   캐릭터
-========================= */
-
-.character{
-  position:absolute;
-  z-index:5;
-  left:50%;
-  top:53%;
-  transform:translate(-50%,-50%);
-  width:200px;
-  height:200px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.character img{
-  max-width:100%;
-  max-height:100%;
-  object-fit:contain;
-  filter:drop-shadow(0 8px 5px rgba(0,0,0,.22));
-}
-
-.sprout{
-  font-size:115px;
-  line-height:1;
-  filter:drop-shadow(0 7px 5px rgba(0,0,0,.18));
-}
-
-/* =========================
-   상태창
-========================= */
-
-.status{
-  padding:12px 14px 7px;
-  background:#fff8e9;
-}
-
-.name-row{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  margin-bottom:8px;
-}
-
-.name{
-  font-size:22px;
-  font-weight:800;
-}
-
-.badge{
-  font-size:11px;
-  padding:4px 8px;
-  border-radius:999px;
-  background:#8b5e34;
-  color:white;
-}
-
-.stats{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:6px;
-}
-
-.stat{
-  background:#f2dfbc;
-  border-radius:12px;
-  padding:7px 5px;
-  text-align:center;
-  font-size:11px;
-}
-
-.bar{
-  height:7px;
-  background:#dcc7a3;
-  border-radius:99px;
-  overflow:hidden;
-  margin-top:4px;
-}
-
-.fill{
-  height:100%;
-  background:#6c9f48;
-  border-radius:99px;
-}
-
-/* =========================
-   버튼
-========================= */
-
-.actions{
-  padding:10px 14px 18px;
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
-  background:#fff8e9;
-}
-
-button{
-  border:0;
-  border-radius:13px;
-  padding:13px 5px;
-  background:#fff;
-  border:2px solid #e4c99e;
-  color:#4a311c;
-  font-size:14px;
-  font-weight:700;
-  box-shadow:0 2px 0 #d5b684;
-}
-
-button:active{
-  transform:translateY(2px);
-  box-shadow:none;
-}
-
-.primary{
-  background:#e8c36a;
-}
-
-.notice{
-  position:fixed;
-  left:50%;
-  bottom:22px;
-  transform:translateX(-50%);
-  background:rgba(45,30,18,.92);
-  color:white;
-  padding:10px 15px;
-  border-radius:999px;
-  font-size:13px;
-  z-index:20;
-  opacity:0;
-  pointer-events:none;
-  transition:.2s;
-}
-
-.notice.show{
-  opacity:1;
-}
-
-@media(min-width:521px){
-  body{
-    padding:20px 0;
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", "Malgun Gothic", sans-serif;
+    background: #f3f4f6;
+    color: #202124;
   }
-
-  .app{
-    border-radius:20px;
-    box-shadow:0 10px 35px rgba(0,0,0,.3);
+  .wrap { max-width: 900px; margin: 0 auto; padding: 32px 18px 60px; }
+  header {
+    background: #111827;
+    color: white;
+    border-radius: 18px;
+    padding: 28px;
+    margin-bottom: 18px;
   }
-}
+  h1 { margin: 0 0 8px; font-size: 28px; }
+  .desc { color: #d1d5db; line-height: 1.6; }
+  .toolbar {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    margin: 16px 0;
+  }
+  button {
+    border: 0; border-radius: 10px; padding: 12px 18px;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+  }
+  .primary { background: #111827; color: white; }
+  .secondary { background: white; border: 1px solid #d1d5db; }
+  .card {
+    background: white; border-radius: 14px; padding: 20px;
+    margin: 12px 0; border: 1px solid #e5e7eb;
+  }
+  .num {
+    display: inline-block; font-size: 12px; font-weight: 800;
+    background: #eef2ff; color: #3730a3; padding: 5px 8px;
+    border-radius: 7px; margin-bottom: 10px;
+  }
+  .question { font-size: 17px; line-height: 1.65; font-weight: 650; }
+  .source { font-size: 12px; color: #6b7280; margin-top: 8px; }
+  input {
+    width: 100%; margin-top: 14px; padding: 13px 14px;
+    border: 1px solid #d1d5db; border-radius: 9px;
+    font-size: 16px; outline: none;
+  }
+  input:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px #e0e7ff; }
+  .result {
+    display: none; background: white; border-radius: 14px; padding: 22px;
+    margin: 18px 0; border: 2px solid #111827;
+  }
+  .result h2 { margin-top: 0; }
+  .score { font-size: 34px; font-weight: 900; }
+  .wrong {
+    border-color: #fecaca;
+    background: #fff7f7;
+  }
+  .correct {
+    border-color: #bbf7d0;
+    background: #f5fff8;
+  }
+  .feedback { margin-top: 10px; font-size: 14px; line-height: 1.5; }
+  .answer { font-weight: 800; color: #166534; }
+  .hidden { display: none; }
+  .section {
+    margin-top: 28px; font-size: 20px; font-weight: 900;
+    padding-bottom: 8px; border-bottom: 2px solid #111827;
+  }
+  .progress {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(243,244,246,.95); padding: 10px 0;
+    backdrop-filter: blur(8px);
+  }
+  .bar { height: 8px; background: #e5e7eb; border-radius: 99px; overflow: hidden; }
+  .fill { height: 100%; width: 0%; background: #111827; transition: width .2s; }
+  .small { font-size: 13px; color: #6b7280; margin: 6px 0 8px; }
 </style>
 </head>
-
 <body>
+<div class="wrap">
+  <header>
+    <h1>영상미디어와 사회 단답형 퀴즈</h1>
+    <div class="desc">
+      업로드한 3개 PDF의 내용을 바탕으로 만든 단답형 문제입니다.<br>
+      총 40문제 · 직접 정답 입력 · 제출 후 자동 채점
+    </div>
+  </header>
 
-<div class="app">
-
-<header>
-  <h1>🥔 감자 키우기</h1>
-  <div class="subtitle">나만의 감자를 정성껏 키워보자</div>
-</header>
-
-<!-- 게임 화면 -->
-<div id="scene" class="scene egg-scene">
-
-  <div class="sun">☀️</div>
-
-  <div id="character" class="character">
-    <div class="sprout">🌱</div>
+  <div class="progress">
+    <div class="small"><span id="answered">0</span> / 40문제 입력</div>
+    <div class="bar"><div class="fill" id="fill"></div></div>
   </div>
 
+  <div id="quiz"></div>
+
+  <div class="toolbar">
+    <button class="primary" onclick="grade()">채점하기</button>
+    <button class="secondary" onclick="showAnswers()">정답 보기</button>
+    <button class="secondary" onclick="resetQuiz()">다시 풀기</button>
+  </div>
+
+  <div id="result" class="result"></div>
 </div>
-
-<!-- 상태 -->
-<section class="status">
-
-  <div class="name-row">
-    <span id="name" class="name">아직 감자가 태어나지 않았어요</span>
-    <span id="personality" class="badge">싹</span>
-  </div>
-
-  <div class="stats">
-
-    <div class="stat">
-      영양
-      <b id="hungerText">100</b>
-      <div class="bar">
-        <div id="hungerBar" class="fill"></div>
-      </div>
-    </div>
-
-    <div class="stat">
-      수분
-      <b id="waterText">100</b>
-      <div class="bar">
-        <div id="waterBar" class="fill"></div>
-      </div>
-    </div>
-
-    <div class="stat">
-      애정
-      <b id="affectionText">50</b>
-      <div class="bar">
-        <div id="affectionBar" class="fill"></div>
-      </div>
-    </div>
-
-    <div class="stat">
-      피로
-      <b id="tiredText">0</b>
-      <div class="bar">
-        <div id="tiredBar" class="fill"></div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- 행동 -->
-<section class="actions">
-
-  <button class="primary" onclick="fertilize()">
-    🌱 비료주기
-  </button>
-
-  <button onclick="water()">
-    💧 물주기
-  </button>
-
-  <button onclick="sunshine()">
-    ☀️ 햇빛쬐기
-  </button>
-
-  <button onclick="pet()">
-    🤲 쓰다듬기
-  </button>
-
-  <button onclick="walk()">
-    🌳 산책
-  </button>
-
-  <button onclick="harvest()">
-    🥔 수확하기
-  </button>
-
-  <button onclick="resetGame()">
-    ↻ 처음부터
-  </button>
-
-</section>
-
-</div>
-
-<div id="notice" class="notice"></div>
-
 
 <script>
+const questions = [
+  // 1권: 영상 미디어의 이해
+  {q:"'중간', '사이', '매개체'를 뜻하는 라틴어 medium의 복수형으로, 정보를 전달하는 여러 가지 매체를 통틀어 부르는 말은?", a:["미디어","media"], s:"영상미디어와 사회1"},
+  {q:"현재 미디어를 설명할 때, 가운데에 있으면서 무엇인가를 전달하거나 이어주는 수단·도구를 무엇이라고 하는가?", a:["미디어","media"], s:"영상미디어와 사회1"},
+  {q:"디지털 미디어와 전통적(아날로그) 미디어는 정보를 보내는 방식과 무엇에서 차이를 보이는가?", a:["받는 방식","정보를 받는 방식"], s:"영상미디어와 사회1"},
+  {q:"콘텐츠를 담은 그릇이며 콘텐츠 성격에 따라 여러 유형이 존재하는 것은?", a:["디바이스","device"], s:"영상미디어와 사회1"},
+  {q:"아날로그 콘텐츠의 형태 중 출판의 대표적인 예로 제시된 것은?", a:["도서","책"], s:"영상미디어와 사회1"},
+  {q:"아날로그 콘텐츠의 형태 중 신문은 어떤 종류의 콘텐츠 형태로 제시되었는가?", a:["신문"], s:"영상미디어와 사회1"},
+  {q:"아날로그 음반의 형태로 제시된 검은색 원판은?", a:["LP","lp"], s:"영상미디어와 사회1"},
+  {q:"아날로그 음반의 형태 중 CD를 재생하는 기기는?", a:["CD 플레이어","cd플레이어","씨디 플레이어"], s:"영상미디어와 사회1"},
+  {q:"아날로그 음반의 형태 중 테이프를 사용하는 것은?", a:["카세트테이프","카세트 테이프","cassette tape"], s:"영상미디어와 사회1"},
+  {q:"디지털 콘텐츠 디바이스의 예로 스마트폰, 태블릿 PC와 함께 제시된 것은?", a:["AI 글래스","ai글래스","AI글래스"], s:"영상미디어와 사회1"},
+  {q:"신문, TV 방송, 라디오, 잡지처럼 예전부터 사용하던 매체를 무엇이라고 하는가?", a:["전통적 미디어","매스 미디어","전통적미디어","매스미디어"], s:"영상미디어와 사회1"},
+  {q:"전통적 미디어의 특징 중 방송국이나 신문사가 정보를 일방적으로 보내기만 하는 성격은?", a:["일방향적 성격","일방향성","일방향적"], s:"영상미디어와 사회1"},
+  {q:"전통적 미디어에서 시청자나 독자가 주는 정보를 그대로 받기만 하는 특징은?", a:["수동적","수동성"], s:"영상미디어와 사회1"},
+  {q:"전통적 미디어의 특징 중 정해진 시간에만 접할 수 있고 선택권이 공급자에게 있는 것은?", a:["시간과 장소의 제한","시간과 장소의 제한성"], s:"영상미디어와 사회1"},
+  {q:"디지털 기술을 쓴 매체를 무엇이라고 하는가?", a:["디지털 미디어","뉴미디어","디지털미디어","뉴미디어"], s:"영상미디어와 사회1"},
+  {q:"디지털 미디어의 특징 중 댓글, 좋아요, 공유 등을 할 수 있는 것은?", a:["상호 소통","상호소통"], s:"영상미디어와 사회1"},
+  {q:"누구나 글이나 영상을 올려 정보를 만드는 생산자가 될 수 있다는 디지털 미디어의 특징은?", a:["소비자이면서 생산자","소비자면서 생산자"], s:"영상미디어와 사회1"},
+  {q:"디지털 미디어에서 채널 접근과 정보 소비의 선택권이 수용자에게 있다는 특징은?", a:["항상성"], s:"영상미디어와 사회1"},
+  {q:"전통적 미디어를 '한 사람이 모두에게 일방적으로 말하는' 무엇에 비유했는가?", a:["확성기"], s:"영상미디어와 사회1"},
+  {q:"디지털 미디어를 '서로 주고받으며 대화하는' 무엇에 비유했는가?", a:["놀이터"], s:"영상미디어와 사회1"},
 
-/* ==================================================
-   네가 올린 이미지
-   파일 이름 = 캐릭터 이름
-================================================== */
+  // 3권: 영상미디어 산업의 구조
+  {q:"미디어 산업의 주체 4가지는 미디어, 수용자, 광고주, 그리고 무엇인가?", a:["정책결정자","정책 결정자"], s:"영상미디어와 사회3"},
+  {q:"미디어 산업에서 콘텐츠 생산 및 유통의 주체는?", a:["미디어"], s:"영상미디어와 사회3"},
+  {q:"기술의 발달과 함께 미디어가 소규모 다품종으로 확대되는 대표적 사례로 제시된 플랫폼은?", a:["유튜브","youtube"], s:"영상미디어와 사회3"},
+  {q:"미디어는 채널을 패키징하여 누구에게 서비스를 제공하는가?", a:["수용자","수용자들"], s:"영상미디어와 사회3"},
+  {q:"미디어와 광고주 사이에서 위치하며 미디어 상품을 구매하고 미디어의 역할 수행을 감시하는 주체는?", a:["수용자"], s:"영상미디어와 사회3"},
+  {q:"융합 미디어 환경에서 수용자는 콘텐츠 생산자이자 무엇을 통해 유통시키는 참여자가 되는가?", a:["소셜 네트워크","SNS","소셜네트워크"], s:"영상미디어와 사회3"},
+  {q:"광고주는 미디어 산업의 스폰서이면서 수용자의 콘텐츠 이용에 대한 무엇 역할을 수행하는가?", a:["간접지불자","간접 지불자"], s:"영상미디어와 사회3"},
+  {q:"광고주가 미디어에 영향을 행사하는 기준으로 제시된 것 중 시청률, 클릭수와 함께 하나는?", a:["사용자"], s:"영상미디어와 사회3"},
+  {q:"OTT에서 하루 동안 서비스를 이용한 순수한 사용자 수치를 나타내는 지표는?", a:["DAU","dau"], s:"영상미디어와 사회3"},
+  {q:"OTT에서 한 달(30일) 동안 서비스를 이용한 순수한 사용자 수치를 나타내는 지표는?", a:["MAU","mau"], s:"영상미디어와 사회3"},
+  {q:"월간 이용자 중 일간 이용자가 차지하는 비율로, 사용자의 습관적 접속 정도를 보여주는 지표는?", a:["DAU/MAU 비율","DAU MAU 비율","고착도","Stickiness","stickiness"], s:"영상미디어와 사회3"},
+  {q:"제시된 시장 점유율 자료에서 총사용 시간 점유율 약 57.7%로 압도적 1위인 OTT는?", a:["넷플릭스","Netflix"], s:"영상미디어와 사회3"},
+  {q:"제시된 시장 점유율 자료에서 사용자(MAU) 점유율 약 37.8%로 1위인 OTT는?", a:["넷플릭스","Netflix"], s:"영상미디어와 사회3"},
+  {q:"미디어 산업에서 공익성과 경제적 효율성의 갈등을 조정하고 규제 정책을 수립하는 주체는?", a:["정책기관","정책결정자","정책 결정자"], s:"영상미디어와 사회3"},
+  {q:"정책기관의 역할 중 신기술 개발 도입과 함께 제시된 것은?", a:["표준화"], s:"영상미디어와 사회3"},
 
-/*
-   중요:
-   아래 이미지 파일들을 index.html과
-   같은 GitHub 폴더에 업로드해야 함.
-
-   꾼감자.PNG
-   대장감자.PNG
-   저는감자.PNG
-   폭력감자.PNG
-   독감자.PNG
-*/
-
-const characters = [
-  {
-    name:"꾼감자",
-    image:"https://raw.githubusercontent.com/p8896w6f7t-maker/Potatoes/main/%E1%84%81%E1%85%AE%E1%86%AB%E1%84%80%E1%85%A1%E1%86%B7%E1%84%8C%E1%85%A1.PNG"
-  },
-  {
-    name:"대장감자",
-    image:"https://raw.githubusercontent.com/p8896w6f7t-maker/Potatoes/main/%E1%84%83%E1%85%A2%E1%84%8C%E1%85%A1%E1%86%BC%E1%84%80%E1%85%A1%E1%86%B7%E1%####_TOKEN_1####"
-  },
-  {
-    name:"저는감자",
-    image:"https://raw.githubusercontent.com/p8896w6f7t-maker/Potatoes/main/%E1%84%8C%E1%85%A5%E1%84%82%E1%85%B3%E1%86%BC%E1%84%80%E1%85%A1%E1%86%B7%E1%85%A1.PNG"
-  },
-  {
-    name:"폭력감자",
-    image:"https://raw.githubusercontent.com/p8896w6f7t-maker/Potatoes/main/%E1%84%91%E1%85%A9%E1%86%A8%E1%85%A7%E1%86%A8%E1%84%80%E1%85%A1%E1%86%B7%E1%85%A1.PNG"
-  },
-  {
-    name:"독감자",
-    image:"https://raw.githubusercontent.com/p8896w6f7t-maker/Potatoes/main/%E1%84%83%E1%85%A9%E1%86%A8%E1%84%80%E1%85%A1%E1%86%B7%E1%85%A1.PNG"
-  }
+  // 2권: 미디어 산업을 이해하는 4개의 키워드
+  {q:"미디어 산업을 이해하는 4개의 키워드 중 개인의 기기·서비스·생산과 관련된 개념은?", a:["미디어 개인화","개인화","Personalization of the media"], s:"영상미디어와 사회2"},
+  {q:"미디어 산업을 이해하는 4개의 키워드 중 이동 중 네트워킹이 유지되면서 정보전달이 가능한 상태를 뜻하는 것은?", a:["미디어 모빌리티","모빌리티","Media mobility"], s:"영상미디어와 사회2"},
+  {q:"사람과 사람의 관계 및 커뮤니티 기반의 연결을 뜻하는 키워드는?", a:["소셜 네트워크","소셜네트워크","Social network"], s:"영상미디어와 사회2"},
+  {q:"사람, 데이터, 사물을 연결시킨 사회를 뜻하는 키워드는?", a:["초연결 사회","초연결사회","Hyper-connected Society"], s:"영상미디어와 사회2"},
+  {q:"기기의 개인화 사례로 1979년에 등장한 것은?", a:["소니 워크맨","워크맨","Sony Walkman"], s:"영상미디어와 사회2"},
+  {q:"서비스와 이용의 개인화 사례로 2005년에 등장한 것은?", a:["유튜브","YouTube"], s:"영상미디어와 사회2"},
+  {q:"서비스와 이용의 개인화 사례로 2009년에 등장한 것은?", a:["넷플릭스","Netflix"], s:"영상미디어와 사회2"},
+  {q:"생산의 개인화와 관련해 제시된 '1인 창작'과 함께 나온 네트워크 개념은?", a:["MCN","multi-channel network","멀티채널네트워크"], s:"영상미디어와 사회2"},
+  {q:"1990년대 PC 기반 소셜 네트워크의 사례로 프리챌, 싸이월드와 함께 제시된 것은?", a:["아이러브스쿨"], s:"영상미디어와 사회2"},
+  {q:"2006년에 개발되었으며 당시 140자 미만의 제한된 메시지를 올릴 수 있었던 텍스트 기반 SNS는?", a:["트위터","Twitter"], s:"영상미디어와 사회2"},
+  {q:"2010년에 개발되었으며 사진과 동영상 공유를 기반으로 한 SNS는?", a:["인스타그램","Instagram"], s:"영상미디어와 사회2"},
+  {q:"초연결 사회의 기초로, 인터넷망을 이용해서 사물을 연결하는 기술은?", a:["IoT","IOT","사물 인터넷","사물인터넷","Internet of Things"], s:"영상미디어와 사회2"},
+  {q:"'언제 어디에나 존재한다'는 뜻으로, 장소와 컴퓨터에 상관없이 자유롭게 네트워크에 접속할 수 있는 환경을 뜻하는 것은?", a:["유비쿼터스","UBIQUITOUS","ubiquitous"], s:"영상미디어와 사회2"},
+  {q:"공중파 방송 콘텐츠를 유튜브 등 SNS에 연결하고 자사 콘텐츠를 다른 매체에 연동하는 현상을 설명하는 장은 무엇과 공중파 방송국의 관계를 다루는가?", a:["SNS/OTT","SNS OTT","SNS와 OTT"], s:"영상미디어와 사회2"},
+  {q:"예전에는 공중파 콘텐츠를 OTT에서 서비스했지만 현재는 오리지널 OTT 콘텐츠를 공중파에서 서비스하는 현상을 무엇이라고 하는가?", a:["콘텐츠의 역전 현상","콘텐츠 역전 현상"], s:"영상미디어와 사회2"}
 ];
 
-
-/* ==================================================
-   게임 데이터
-================================================== */
-
-let state = JSON.parse(
-  localStorage.getItem("POTATO_GAME_V2")
-) || {
-
-  born:false,
-
-  growth:0,
-
-  character:null,
-
-  personality:null,
-
-  hunger:100,
-
-  water:100,
-
-  affection:50,
-
-  tired:0,
-
-  walking:false
-
-};
-
-
-/* ==================================================
-   저장
-================================================== */
-
-function save(){
-
-  localStorage.setItem(
-    "POTATO_GAME_V2",
-    JSON.stringify(state)
-  );
-
-}
-
-
-/* ==================================================
-   숫자 제한
-================================================== */
-
-function clamp(value){
-
-  return Math.max(
-    0,
-    Math.min(100,value)
-  );
-
-}
-
-
-/* ==================================================
-   알림
-================================================== */
-
-function toast(text){
-
-  const notice =
-    document.getElementById("notice");
-
-  notice.textContent = text;
-
-  notice.classList.add("show");
-
-  clearTimeout(window.noticeTimer);
-
-  window.noticeTimer =
-    setTimeout(
-      ()=>{
-        notice.classList.remove("show");
-      },
-      1300
-    );
-
-}
-
-
-/* ==================================================
-   캐릭터 랜덤 선택
-================================================== */
-
-function chooseCharacter(){
-
-  const index =
-    Math.floor(
-      Math.random()*characters.length
-    );
-
-  state.character =
-    characters[index];
-
-}
-
-
-/* ==================================================
-   감자 태어나기
-================================================== */
-
-function hatch(){
-
-  if(
-    !state.born &&
-    state.growth >= 100
-  ){
-
-    state.born = true;
-
-    chooseCharacter();
-
-    const personalities = [
-      "애교쟁이",
-      "느긋한",
-      "장난꾸러기",
-      "호기심 많은",
-      "겁이 많은"
-    ];
-
-    state.personality =
-      personalities[
-        Math.floor(
-          Math.random()*personalities.length
-        )
-      ];
-
-    save();
-
-    render();
-
-    toast(
-      state.character.name+
-      "가 태어났어요!"
-    );
-
-  }
-
-}
-
-
-/* ==================================================
-   비료
-================================================== */
-
-function fertilize(){
-
-  state.growth =
-    Math.min(
-      100,
-      state.growth+12
-    );
-
-  state.hunger =
-    clamp(
-      state.hunger+15
-    );
-
-  state.affection =
-    clamp(
-      state.affection+4
-    );
-
-  state.tired =
-    clamp(
-      state.tired+3
-    );
-
-  hatch();
-
-  save();
-
-  render();
-
-  toast("영양분을 듬뿍 줬어요!");
-
-}
-
-
-/* ==================================================
-   물
-================================================== */
-
-function water(){
-
-  state.growth =
-    Math.min(
-      100,
-      state.growth+10
-    );
-
-  state.water =
-    clamp(
-      state.water+20
-    );
-
-  state.affection =
-    clamp(
-      state.affection+3
-    );
-
-  hatch();
-
-  save();
-
-  render();
-
-  toast("물을 촉촉하게 줬어요!");
-
-}
-
-
-/* ==================================================
-   햇빛
-================================================== */
-
-function sunshine(){
-
-  state.growth =
-    Math.min(
-      100,
-      state.growth+8
-    );
-
-  state.water =
-    clamp(
-      state.water-5
-    );
-
-  state.affection =
-    clamp(
-      state.affection+5
-    );
-
-  hatch();
-
-  save();
-
-  render();
-
-  toast("햇빛을 쬐었어요!");
-
-}
-
-
-/* ==================================================
-   쓰다듬기
-================================================== */
-
-function pet(){
-
-  state.affection =
-    clamp(
-      state.affection+10
-    );
-
-  state.tired =
-    clamp(
-      state.tired-4
-    );
-
-  save();
-
-  render();
-
-  if(state.born){
-
-    toast(
-      state.character.name+
-      "가 좋아해요!"
-    );
-
-  }else{
-
-    toast(
-      "싹을 살살 쓰다듬었어요!"
-    );
-
-  }
-
-}
-
-
-/* ==================================================
-   산책
-   배경이 밭 → 공원으로 바뀜
-================================================== */
-
-function walk(){
-
-  if(!state.born){
-
-    toast(
-      "아직 싹이라 산책을 못 가요!"
-    );
-
-    return;
-
-  }
-
-  if(state.walking){
-
-    return;
-
-  }
-
-  state.walking = true;
-
-  state.tired =
-    clamp(
-      state.tired+12
-    );
-
-  state.affection =
-    clamp(
-      state.affection+8
-    );
-
-  const scene =
-    document.getElementById("scene");
-
-  scene.className =
-    "scene walk";
-
-  toast(
-    state.character.name+
-    "와 산책 중!"
-  );
-
-  save();
-
-  /*
-    3초 후 다시 밭으로
-  */
-
-  setTimeout(
-
-    ()=>{
-
-      state.walking = false;
-
-      save();
-
-      render();
-
-    },
-
-    3000
-
-  );
-
-}
-
-
-/* ==================================================
-   수확
-================================================== */
-
-function harvest(){
-
-  if(!state.born){
-
-    toast(
-      "아직 감자가 태어나지 않았어요!"
-    );
-
-    return;
-
-  }
-
-  toast(
-    state.character.name+
-    "는 계속 키워주세요!"
-  );
-
-}
-
-
-/* ==================================================
-   초기화
-================================================== */
-
-function resetGame(){
-
-  const ok =
-    confirm(
-      "정말 처음부터 다시 키울까요?"
-    );
-
-  if(!ok){
-
-    return;
-
-  }
-
-  localStorage.removeItem(
-    "POTATO_GAME_V2"
-  );
-
-  location.reload();
-
-}
-
-
-/* ==================================================
-   화면 표시
-================================================== */
-
-function render(){
-
-  const scene =
-    document.getElementById("scene");
-
-  const character =
-    document.getElementById("character");
-
-  const name =
-    document.getElementById("name");
-
-  const personality =
-    document.getElementById("personality");
-
-
-  /*
-    태어나기 전
-  */
-
-  if(!state.born){
-
-    scene.className =
-      "scene egg-scene";
-
-    character.innerHTML =
-      '<div class="sprout">🌱</div>';
-
-    name.textContent =
-      "감자 싹";
-
-    personality.textContent =
-      "성장 중";
-
-  }
-
-  /*
-    태어난 후
-  */
-
-  else{
-
-    scene.className =
-      "scene field";
-
-    character.innerHTML =
-      '<img src="'+
-      state.character.image+
-      '" alt="'+
-      state.character.name+
-      '">';
-
-    name.textContent =
-      state.character.name;
-
-    personality.textContent =
-      state.personality;
-
-  }
-
-
-  /*
-    상태 수치
-  */
-
-  document.getElementById(
-    "hungerText"
-  ).textContent =
-    Math.round(state.hunger);
-
-  document.getElementById(
-    "waterText"
-  ).textContent =
-    Math.round(state.water);
-
-  document.getElementById(
-    "affectionText"
-  ).textContent =
-    Math.round(state.affection);
-
-  document.getElementById(
-    "tiredText"
-  ).textContent =
-    Math.round(state.tired);
-
-
-  document.getElementById(
-    "hungerBar"
-  ).style.width =
-    state.hunger+"%";
-
-  document.getElementById(
-    "waterBar"
-  ).style.width =
-    state.water+"%";
-
-  document.getElementById(
-    "affectionBar"
-  ).style.width =
-    state.affection+"%";
-
-  document.getElementById(
-    "tiredBar"
-  ).style.width =
-    state.tired+"%";
-
-}
-
-
-/* ==================================================
-   시간에 따른 상태 변화
-================================================== */
-
-setInterval(
-
-  ()=>{
-
-    if(!state.born){
-
-      return;
-
+const quiz = document.getElementById("quiz");
+
+function render() {
+  quiz.innerHTML = "";
+  let currentSection = "";
+  questions.forEach((item, i) => {
+    if (item.s !== currentSection) {
+      currentSection = item.s;
+      const sec = document.createElement("div");
+      sec.className = "section";
+      sec.textContent = currentSection;
+      quiz.appendChild(sec);
     }
+    const card = document.createElement("div");
+    card.className = "card";
+    card.id = "card-" + i;
+    card.innerHTML = `
+      <div class="num">${i+1}번</div>
+      <div class="question">${escapeHtml(item.q)}</div>
+      <div class="source">${escapeHtml(item.s)} 내용 기반</div>
+      <input type="text" id="ans-${i}" placeholder="정답을 입력하세요" autocomplete="off"
+             oninput="updateProgress()">
+      <div class="feedback" id="feedback-${i}"></div>
+    `;
+    quiz.appendChild(card);
+  });
+}
 
-    state.hunger =
-      clamp(
-        state.hunger-2
-      );
+function normalize(str) {
+  return String(str || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "")
+    .replace(/[·•ㆍ,，.。()（）'"“”‘’\-_/]/g, "");
+}
 
-    state.water =
-      clamp(
-        state.water-2
-      );
+function isCorrect(user, accepted) {
+  const u = normalize(user);
+  return accepted.some(x => normalize(x) === u);
+}
 
-    state.tired =
-      clamp(
-        state.tired+2
-      );
+function grade() {
+  let score = 0;
+  questions.forEach((item, i) => {
+    const input = document.getElementById("ans-" + i);
+    const card = document.getElementById("card-" + i);
+    const feedback = document.getElementById("feedback-" + i);
+    const user = input.value;
 
+    card.classList.remove("correct", "wrong");
+    feedback.innerHTML = "";
 
-    if(
-      state.hunger < 25 ||
-      state.water < 25
-    ){
-
-      state.affection =
-        clamp(
-          state.affection-1
-        );
-
+    if (isCorrect(user, item.a)) {
+      score++;
+      card.classList.add("correct");
+      feedback.innerHTML = "정답";
+    } else {
+      card.classList.add("wrong");
+      feedback.innerHTML = `오답 · 정답: <span class="answer">${escapeHtml(item.a[0])}</span>`;
     }
+  });
 
-    save();
+  const percent = Math.round(score / questions.length * 100);
+  const result = document.getElementById("result");
+  result.style.display = "block";
+  result.innerHTML = `
+    <h2>채점 결과</h2>
+    <div class="score">${score} / ${questions.length}</div>
+    <p>${percent}점 · 맞은 문제 ${score}개 · 틀린 문제 ${questions.length - score}개</p>
+  `;
+  window.scrollTo({top: document.body.scrollHeight, behavior:"smooth"});
+}
 
-    render();
+function showAnswers() {
+  questions.forEach((item, i) => {
+    document.getElementById("feedback-" + i).innerHTML =
+      `정답: <span class="answer">${escapeHtml(item.a[0])}</span>`;
+  });
+}
 
-  },
+function resetQuiz() {
+  questions.forEach((_, i) => {
+    document.getElementById("ans-" + i).value = "";
+    document.getElementById("card-" + i).classList.remove("correct","wrong");
+    document.getElementById("feedback-" + i).innerHTML = "";
+  });
+  document.getElementById("result").style.display = "none";
+  updateProgress();
+  window.scrollTo({top:0, behavior:"smooth"});
+}
 
-  3000
+function updateProgress() {
+  let n = 0;
+  questions.forEach((_, i) => {
+    if (document.getElementById("ans-" + i).value.trim()) n++;
+  });
+  document.getElementById("answered").textContent = n;
+  document.getElementById("fill").style.width = (n / questions.length * 100) + "%";
+}
 
-);
-
-
-/* ==================================================
-   시작
-================================================== */
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[c]));
+}
 
 render();
-
+updateProgress();
 </script>
-
 </body>
 </html>
